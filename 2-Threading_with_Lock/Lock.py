@@ -3,11 +3,10 @@ import time
 
 class Counter(object):
     def __init__(self):
-        self.lock = threading.Lock()
         self.count = 0
 
     def increment(self, offset):
-        with self.lock:
+        with threading.Lock():
             self.count += offset # this was the line producing a data race in the data race example
 
 def updateCountObj(counterObj):
