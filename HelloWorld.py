@@ -2,6 +2,7 @@ import re, string, sys
 
 
 def index_words(text):
+    print("START")
     if text:
         print("called--")
         yield 0
@@ -16,6 +17,7 @@ if __name__ == '__main__':
 
     iterator1 = index_words(words)  # result: <generator object index_words at 0x106724c00>
     print(list(iterator1))
+    # START
     # called--
     # called
     # called
@@ -28,6 +30,7 @@ if __name__ == '__main__':
 
     iterator2 = index_words(words) # result: <generator object index_words at 0x106724c00>
     print(iterator2.__next__())
+    # START
     # called--
     # 0
     print(iterator2.__next__())
