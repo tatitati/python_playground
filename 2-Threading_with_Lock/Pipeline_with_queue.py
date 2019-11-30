@@ -9,16 +9,23 @@ def readFile():
         for line in f:
             yield line
 
-def consumer(callback):
-    print("Consumer: waiting")
+def stage1(func, toQueue):
+    print("Stage1: waiting")
     result = queue.get()
-    print("Consumer: done")
-    callback(result)
+    print("Stage1: done")
+    func(result)
 
-def producer(data):
-    print("Producer: putting")
-    queue.put(data)
-    print("Producer: done")
+def stage2(func, fromQueue, toQueue):
+    print("Stage2: waiting")
+    result = queue.get()
+    print("Stage2: done")
+    func(result)
+
+def stage3(func, fromQueue):
+    print("Stage3: waiting")
+    result = queue.get()
+    print("Stage3: done")
+    func(result)
 
 def run_threads(functionTarget):
     threads = []
