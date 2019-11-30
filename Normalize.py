@@ -1,10 +1,10 @@
 import re, string, sys
 
-def normalize(iterator):
-    total = sum(iterator())
+def normalize(lamba_iterator):
+    total = sum(lamba_iterator())
 
     result = []
-    for value in iterator():
+    for value in lamba_iterator():
         percent = 100*value/total
         result.append(percent)
 
