@@ -1,18 +1,23 @@
 import threading
 import time
 
+def do_something():
+    print("thread sleeping 2 second...")
+    time.sleep(2)
+    print("thread DONE")
+
+
 class Counter(object):
     def __init__(self):
-        self.lock = threading.Lock()
         self.count = 0
 
     def increment(self, offset):
-        with self.lock:
-            self.count += offset # this was the line producing a data race in the data race example
+        self.count += offset # this line is not thread safe, so we would need a Lock in here. This will produce data races
 
 def updateCountObj(counterObj):
     for _ in range(100000):
         counterObj.increment(1)
+
 
 def run_threads(counterObj):
     threads = []
@@ -26,9 +31,10 @@ def run_threads(counterObj):
 
 counter = Counter() # all the thread will update the counter of this object
 run_threads(counter)
-print(f'Counter is: {counter.count}') # expected is 500000 (each thread increase count 100.000 and we have 5 threads)
+print(f'Counter is: {counter.count}')
 
 start = time.perf_counter()
+
 
 finish = time.perf_counter()
 print("Main completed. total time: " + str(finish - start))
@@ -37,18 +43,18 @@ print("Main completed. total time: " + str(finish - start))
 
 # OUTPUT 1:
 # ======
-# Counter is: 500000
+# Counter is: 401371
 # Main completed. total time: 5.22000000002798e-07
 
 # OUTPUT 2:
 # ======
-# Counter is: 500000
+# Counter is: 424795
 # Main completed. total time: 1.8823000000001144e-05
 
 
 # OUTPUT 3:
 # ======
-# Counter is: 500000
+# Counter is: 315559
 # Main completed. total time: 1.8993999999994404e-05
 
 
