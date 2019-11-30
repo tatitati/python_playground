@@ -19,7 +19,7 @@ finish = time.perf_counter()
 print("Main completed. total time: " + str(finish - start))
 
 
-# > python python 2-Futures/Future.py 
+# > python python 3-Futures/Future.py
 #
 # OUTPUT:
 # ======
