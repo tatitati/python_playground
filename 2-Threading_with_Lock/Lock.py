@@ -12,28 +12,25 @@ class Counter(object):
         self.count = 0
 
     def increment(self, offset):
-        self.count += offset
+        self.count += offset # this line is not thread safe, so we would need a Lock in here
 
-def worker(how_many, counter):
-    for _ in range(how_many):
-        counter.increment(1)
+def updateCountObj(counterObj):
+    for _ in range(100000):
+        counterObj.increment(1)
 
 
-def run_threads(func, how_many, counter):
+def run_threads(counterObj):
     threads = []
     for _ in range(5):
-        args = (how_many, counter)
-        thread = threading.Thread(target=func, args=args)
+        thread = threading.Thread(target=updateCountObj, args=[counterObj])
         threads.append(thread)
         thread.start()
 
     for thread in threads:
         thread.join()
 
-
-how_many = 100000
-counter = Counter()
-run_threads(worker, how_many, counter)
+counter = Counter() # all the thread will update the counter of this object
+run_threads(counter)
 print(f'Counter is: {counter.count}')
 
 start = time.perf_counter()
