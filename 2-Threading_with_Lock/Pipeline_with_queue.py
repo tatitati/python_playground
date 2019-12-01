@@ -18,23 +18,33 @@ def stage1():
     for line in readLineFile():
         print("Stage1: putting")
         queue1.put(line)
+    # send sentinel to allow the rest that there won't be more data coming
+    queue1.put(None)
+    print("stage 1: closing")
     print("Stage1: done")
 
 def stage2():
     while True:
         textline = queue1.get()
+        if textline is None:
+            queue2.put(None)
+            print("stage 2: closing")
+            return
+
         urls = findLinks(textline)
         for url in urls:
-            print(f"\t\t\t\tstage2: Received -> {url}")
+            print(f"\t\t\t\tstage2: forwarding url -> {url}")
             queue2.put(url)
-        print("\t\t\t\tStage2: done")
 
 
 def stage3():
     while True:
         url = queue2.get()
+        if url is None:
+            print("stage 3: closing")
+            return
+
         print(f"\t\t\t\t\t\t\t\tstage3: Received -> {url}")
-        print("\t\t\t\t\t\t\t\tStage3: done")
 
 def run_threads():
     t1 = threading.Thread(target=stage1)
@@ -62,15 +72,15 @@ print(line1)
 print(line2)
 print(line3)
 
-# run_threads()
-q = Queue(2) # max amount of items that we can put in the queue. If we put more, then the .put() block until more space is released
-q.put("asdfasdf")
-print("-")
-q.put("11111")
-print("-")
-q.put("33434")  # this line becomes block, waitingo for the consumer to do space in the queue (by consuming). Otherwise this producer cannot put any other msg
-print("------")
-print(q.get())
-print(q.get())
-print(q.get())
+run_threads()
+# q = Queue(2) # max amount of items that we can put in the queue. If we put more, then the .put() block until more space is released
+# q.put("asdfasdf")
+# print("-")
+# q.put("11111")
+# print("-")
+# q.put("33434")  # this line becomes block, waitingo for the consumer to do space in the queue (by consuming). Otherwise this producer cannot put any other msg
+# print("------")
+# print(q.get())
+# print(q.get())
+# print(q.get())
 
