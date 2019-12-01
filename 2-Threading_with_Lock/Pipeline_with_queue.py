@@ -17,9 +17,9 @@ def findLinks(text):
     return re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', text)
 
 
-def stage1(namethread, filepath):
+def stage1(filepath):
     for line in readLineFile(filepath):
-        print(f"Stage1 {namethread}: putting")
+        print(f"Stage1: putting")
         queue1.put(line)
     # send sentinel to allow the rest that there won't be more data coming and they can close
     queue1.put(None)
@@ -52,13 +52,11 @@ def stage3():
 
 
 def run_threads():
-    t1_1 = threading.Thread(target=stage1, args=('t1_1', '2-Threading_with_Lock/text.txt'))
-    t1_2 = threading.Thread(target=stage1, args=('t1_2', '2-Threading_with_Lock/text2.txt'))
+    t1 = threading.Thread(target=stage1, args=('2-Threading_with_Lock/text.txt'))
     t2 = threading.Thread(target=stage2)
     t3 = threading.Thread(target=stage3)
 
-    t1_1.start()
-    t1_2.start()
+    t1.start()
     t2.start()
     t3.start()
 
