@@ -6,22 +6,26 @@ import re
 queue1 = Queue()
 queue2 = Queue()
 
-def readLineFile():
-    with open('2-Threading_with_Lock/text.txt') as f:
+
+def readLineFile(filepath):
+    with open(filepath) as f:
         for line in f:
             yield line
+
 
 def findLinks(text):
     return re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', text)
 
-def stage1():
-    for line in readLineFile():
-        print("Stage1: putting")
+
+def stage1(namethread, filepath):
+    for line in readLineFile(filepath):
+        print(f"Stage1 {namethread}: putting")
         queue1.put(line)
-    # send sentinel to allow the rest that there won't be more data coming
+    # send sentinel to allow the rest that there won't be more data coming and they can close
     queue1.put(None)
     print("stage 1: closing")
     print("Stage1: done")
+
 
 def stage2():
     while True:
@@ -46,31 +50,26 @@ def stage3():
 
         print(f"\t\t\t\t\t\t\t\tstage3: Received -> {url}")
 
+
 def run_threads():
-    t1 = threading.Thread(target=stage1)
+    t1_1 = threading.Thread(target=stage1, args=('t1_1', '2-Threading_with_Lock/text.txt'))
+    t1_2 = threading.Thread(target=stage1, args=('t1_2', '2-Threading_with_Lock/text2.txt'))
     t2 = threading.Thread(target=stage2)
     t3 = threading.Thread(target=stage3)
 
-    t1.start()
+    t1_1.start()
+    t1_2.start()
     t2.start()
     t3.start()
 
     threads = []
-    threads.append(t1)
+    threads.append(t1_1)
+    threads.append(t1_2)
     threads.append(t2)
     threads.append(t3)
 
     for thread in threads:
         thread.join()
-
-iterator = readLineFile()
-line1 = iterator.__next__()
-line2 = iterator.__next__()
-line3 = iterator.__next__()
-
-print(line1)
-print(line2)
-print(line3)
 
 run_threads()
 # q = Queue(2) # max amount of items that we can put in the queue. If we put more, then the .put() block until more space is released
