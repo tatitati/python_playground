@@ -23,6 +23,7 @@ def stage1(filepath):
         queue1.put(line)
     # send sentinel to allow the rest that there won't be more data coming and they can close
     queue1.put(None)
+    queue1.task_done()
     print("stage 1: closing")
     print("Stage1: done")
 
@@ -33,12 +34,14 @@ def stage2():
         if textline is None:
             queue2.put(None)
             print("stage 2: closing")
+            queue2.task_done()
             return
 
         urls = findLinks(textline)
         for url in urls:
             print(f"\t\t\t\tstage2: forwarding url -> {url}")
             queue2.put(url)
+            queue2.task_done()
 
 
 def stage3():
@@ -49,6 +52,7 @@ def stage3():
             return
 
         print(f"\t\t\t\t\t\t\t\tstage3: Received -> {url}")
+        queue2.task_done()
 
 
 def run_threads():

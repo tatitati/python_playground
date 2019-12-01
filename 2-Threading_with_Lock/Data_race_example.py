@@ -1,18 +1,21 @@
 import threading
 import time
 
+
 def do_something():
     print("thread sleeping 2 second...")
     time.sleep(2)
     print("thread DONE")
 
 
+# Counter object will be shared between all threads (the same object), and they will modify its status producing a race condition
 class Counter(object):
     def __init__(self):
         self.count = 0
 
     def increment(self, offset):
         self.count += offset # this line is not thread safe, so we would need a Lock in here. This will produce data races
+
 
 def updateCountObj(counterObj):
     for _ in range(100000):
@@ -34,7 +37,6 @@ run_threads(counter)
 print(f'Counter is: {counter.count}')
 
 start = time.perf_counter()
-
 
 finish = time.perf_counter()
 print("Main completed. total time: " + str(finish - start))
