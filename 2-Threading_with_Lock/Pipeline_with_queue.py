@@ -16,7 +16,6 @@ def findLinks(text):
 
 def stage1():
     for line in readLineFile():
-        sleep(1)
         print("Stage1: putting")
         queue1.put(line)
     print("Stage1: done")
@@ -24,7 +23,6 @@ def stage1():
 def stage2():
     while True:
         textline = queue1.get()
-        sleep(1)
         urls = findLinks(textline)
         for url in urls:
             print(f"\t\t\t\tstage2: Received -> {url}")
@@ -35,7 +33,6 @@ def stage2():
 def stage3():
     while True:
         url = queue2.get()
-        sleep(1)
         print(f"\t\t\t\t\t\t\t\tstage3: Received -> {url}")
         print("\t\t\t\t\t\t\t\tStage3: done")
 
@@ -56,14 +53,24 @@ def run_threads():
     for thread in threads:
         thread.join()
 
-# iterator = readLineFile()
-# line1 = iterator.__next__()
-# line2 = iterator.__next__()
-# line3 = iterator.__next__()
-#
-# print(line1)
-# print(line2)
-# print(line3)
+iterator = readLineFile()
+line1 = iterator.__next__()
+line2 = iterator.__next__()
+line3 = iterator.__next__()
 
-run_threads()
+print(line1)
+print(line2)
+print(line3)
+
+# run_threads()
+q = Queue(2) # max amount of items that we can put in the queue. If we put more, then the .put() block until more space is released
+q.put("asdfasdf")
+print("-")
+q.put("11111")
+print("-")
+q.put("33434")  # this line becomes block, waitingo for the consumer to do space in the queue (by consuming). Otherwise this producer cannot put any other msg
+print("------")
+print(q.get())
+print(q.get())
+print(q.get())
 
