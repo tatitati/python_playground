@@ -52,7 +52,7 @@ def stage3():
 
 
 def run_threads():
-    t1 = threading.Thread(target=stage1, args=('2-Threading_with_Lock/text.txt'))
+    t1 = threading.Thread(target=stage1, args=['2-Threading_with_Lock/text.txt'])
     t2 = threading.Thread(target=stage2)
     t3 = threading.Thread(target=stage3)
 
@@ -61,8 +61,7 @@ def run_threads():
     t3.start()
 
     threads = []
-    threads.append(t1_1)
-    threads.append(t1_2)
+    threads.append(t1)
     threads.append(t2)
     threads.append(t3)
 
