@@ -73,14 +73,4 @@ def run_threads():
         thread.join()
 
 run_threads()
-# q = Queue(2) # max amount of items that we can put in the queue. If we put more, then the .put() block until more space is released
-# q.put("asdfasdf")
-# print("-")
-# q.put("11111")
-# print("-")
-# q.put("33434")  # this line becomes block, waitingo for the consumer to do space in the queue (by consuming). Otherwise this producer cannot put any other msg
-# print("------")
-# print(q.get())
-# print(q.get())
-# print(q.get())
 
